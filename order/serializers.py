@@ -61,7 +61,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "zipcode",
             "place",
             "phone",
-            "stripe_token",
             "items",
         )
 
