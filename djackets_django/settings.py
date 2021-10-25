@@ -32,6 +32,7 @@ STRIPE_SECRET_KEY = "sk_test_51HIHiuKBJV2qeWbD4IBpAODack7r7r9LJ0Y65zSFx7jUUwgy2n
 # Application definition
 
 INSTALLED_APPS = [
+    "djangocms_admin_style",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "djoser",
     "product",
     "order",
+    'tinymce',
 ]
 
 CORS_ALLOWED_ORIGINS = [
