@@ -1,11 +1,22 @@
 from django.contrib import admin
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, PersonalInfos
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.safestring import mark_safe
+from django.contrib.auth.models import User
 
 
 admin.site.register(OrderItem)
+
+
+@admin.register(PersonalInfos)
+class PersonalInfosAdmin(admin.ModelAdmin):
+    list_display = ("first_name", "last_name", "created_at", "user_id")
+    readonly_fields = ("user_id",)
+    def user_id(self, obj):
+        if obj.user:
+            return obj.user.id
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
