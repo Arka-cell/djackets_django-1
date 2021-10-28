@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, PersonalInfos
 
 from product.serializers import ProductSerializer
 
@@ -59,3 +59,25 @@ class OrderSerializer(serializers.ModelSerializer):
             OrderItem.objects.create(order=order, **item_data)
 
         return order
+
+
+class PersonalInfosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PersonalInfos
+        read_only_fields = ("confirmed", "user")
+        fields = (
+            "first_name",
+            "last_name",
+            "phone",
+            "instagram",
+            "instagram_followers",
+            "facebook",
+            "facebook_followers",
+            "tiktok",
+            "tiktok_followers",
+            "youtube",
+            "youtube_followers",
+            "confirmed",
+            "user"
+        )
+
