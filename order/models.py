@@ -5,26 +5,26 @@ from product.models import Product
 
 
 class PersonalInfos(models.Model):
-    user = models.ForeignKey(User, related_name="infos", on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100, default=None)
-    last_name = models.CharField(max_length=100, default=None)
-    email = models.CharField(max_length=100, default=None)
-    phone = models.CharField(max_length=100, default=None)
-    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.OneToOneField(User, related_name="infos", on_delete=models.CASCADE, primary_key=True)
+    first_name = models.CharField(max_length=100, default=None, null=True)
+    last_name = models.CharField(max_length=100, default=None, null=True)
+    phone = models.CharField(max_length=100, default=None, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
-    instagram = models.URLField(max_length=200, default="")
+    instagram = models.CharField(max_length=200, default="", blank=True)
     instagram_followers = models.IntegerField(default=0)
-    facebook = models.URLField(max_length=200, default="")
+    facebook = models.CharField(max_length=200, default="", blank=True)
     facebook_followers = models.IntegerField(default=0)
-    tiktok = models.URLField(max_length=200, default="")
+    tiktok = models.CharField(max_length=200, default="", blank=True)
     tiktok_followers = models.IntegerField(default=0)
-    youtube = models.URLField(max_length=200, default="")
+    youtube = models.CharField(max_length=200, default="", blank=True)
     youtube_followers = models.IntegerField(default=0)
     def confirmed(self):
         if self.user and self.first_name and self.last_name and self.email:
             return True 
         else:
             return False
+
 
 class Order(models.Model):
     name = models.CharField(max_length=50, default="")
