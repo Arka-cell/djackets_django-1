@@ -4,12 +4,12 @@ from django.db import models
 from product.models import Product
 
 
-class PersonalInfos(models.Model): 
+class PersonalInfos(models.Model):
     user = models.ForeignKey(User, related_name="infos", on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, default=None)
+    last_name = models.CharField(max_length=100, default=None)
+    email = models.CharField(max_length=100, default=None)
+    phone = models.CharField(max_length=100, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
 
     instagram = models.URLField(max_length=200, default="")
@@ -20,7 +20,11 @@ class PersonalInfos(models.Model):
     tiktok_followers = models.IntegerField(default=0)
     youtube = models.URLField(max_length=200, default="")
     youtube_followers = models.IntegerField(default=0)
-
+    def confirmed(self):
+        if self.user and self.first_name and self.last_name and self.email:
+            return True 
+        else:
+            return False
 
 class Order(models.Model):
     name = models.CharField(max_length=50, default="")
