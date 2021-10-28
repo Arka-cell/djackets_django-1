@@ -4,5 +4,7 @@ Pillow==8.4.0
 djoser==2.1.0
 django-cors-headers==3.10.0
 stripe==2.61.0
+django-tinymce==3.3.0
+djangocms-admin-style==2.0.2
 # developmenet dependencies
 black==21.9b0
