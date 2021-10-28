@@ -14,7 +14,7 @@ from rest_framework.decorators import (
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, PersonalInfos
 from .serializers import OrderSerializer, MyOrderSerializer
 
 
@@ -22,10 +22,10 @@ from .serializers import OrderSerializer, MyOrderSerializer
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def checkout(request):
+    data = request.data 
+    data["user"] = request.user.id
     serializer = OrderSerializer(data=request.data)
-
     if serializer.is_valid():
-        print("checkout data:\n",serializer.validated_data)
         paid_amount = sum(
             item.get("quantity") * item.get("product").price
             for item in serializer.validated_data["items"]
@@ -48,3 +48,21 @@ class OrdersList(APIView):
         orders = Order.objects.filter(user=request.user)
         serializer = MyOrderSerializer(orders, many=True)
         return Response(serializer.data)
+
+
+class PersonalInfosView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        user_id = request.user.id
+        if(PersonalInfos.objects.filter(id=user_id).exists()):
+            print("user exists")
+            PersonalInfos.objects.get(id=user_id)
+            return Response(status=200)
+        else:
+            print("creating user")
+            new_user_infos = PersonalInfos(
+                user=User.objects.get(id=user_id)
+            )
+            return Response(status=201)
