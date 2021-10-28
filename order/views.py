@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render
-
+from django.core.exceptions import ValidationError
 from rest_framework import status, authentication, permissions
 from rest_framework.decorators import (
     api_view,
@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Order, OrderItem, PersonalInfos
-from .serializers import OrderSerializer, MyOrderSerializer
+from .serializers import OrderSerializer, MyOrderSerializer, PersonalInfosSerializer
 
 
 @api_view(["POST"])
@@ -54,15 +54,25 @@ class PersonalInfosView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, format=None):
+    def get(self, request):
         user_id = request.user.id
-        if(PersonalInfos.objects.filter(id=user_id).exists()):
-            print("user exists")
-            PersonalInfos.objects.get(id=user_id)
-            return Response(status=200)
+        if(PersonalInfos.objects.filter(user=user_id).exists()):
+            serializer = PersonalInfosSerializer(PersonalInfos.objects.get(user=user_id))
+            return Response(status=200, data=serializer.data)
         else:
-            print("creating user")
             new_user_infos = PersonalInfos(
                 user=User.objects.get(id=user_id)
             )
-            return Response(status=201)
+            new_user_infos.save()
+            serializer = PersonalInfosSerializer(new_user_infos)
+            return Response(status=201, data=serializer.data)
+
+    def patch(self, request):
+        user_id = request.user.id
+        user = PersonalInfos.objects.get(user=user_id)
+        serializer = PersonalInfosSerializer(user, data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(status=400, data=ValidationError(serializer.errors))
+        serializer.is_valid()
+        serializer.save()
+        return Response(status=200, data=serializer.validated_data)
