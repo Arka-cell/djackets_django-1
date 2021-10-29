@@ -76,4 +76,5 @@ class Product(models.Model):
 
 class ProductColors(models.Model):
     product = models.ForeignKey(Product, related_name="product_colors", on_delete=models.CASCADE)
+    name = models.CharField(max_length=20, blank=True, default="")
     image = models.ImageField(upload_to="products/colors", blank=True, null=True)
