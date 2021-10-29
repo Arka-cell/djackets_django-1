@@ -32,6 +32,8 @@ class Product(models.Model):
     thumbnail = models.ImageField(upload_to="uploads/", blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
     quantity = models.IntegerField(default=0)
+    has_colors = models.BooleanField(default=False)
+    
 
     class Meta:
         ordering = ("-date_added",)
@@ -70,3 +72,8 @@ class Product(models.Model):
         thumbnail = File(thumb_io, name=image.name)
 
         return thumbnail
+
+
+class ProductColors(models.Model):
+    product = models.ForeignKey(Product, related_name="product_colors", on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="products/colors", blank=True, null=True)
