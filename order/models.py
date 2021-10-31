@@ -19,8 +19,9 @@ class PersonalInfos(models.Model):
     tiktok_followers = models.IntegerField(default=0)
     youtube = models.CharField(max_length=200, default="", blank=True)
     youtube_followers = models.IntegerField(default=0)
+    
     def confirmed(self):
-        if self.user and self.first_name and self.last_name and self.email:
+        if self.user and self.first_name and self.last_name:
             return True 
         else:
             return False
