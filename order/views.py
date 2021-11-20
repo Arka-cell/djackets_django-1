@@ -58,7 +58,8 @@ class PersonalInfosView(APIView):
         user_id = request.user.id
         if(PersonalInfos.objects.filter(user=user_id).exists()):
             serializer = PersonalInfosSerializer(PersonalInfos.objects.get(user=user_id))
-            return Response(status=200, data=serializer.data)
+            data = serializer.data
+            return Response(status=200, data=data)
         else:
             new_user_infos = PersonalInfos(
                 user=User.objects.get(id=user_id)
@@ -75,4 +76,5 @@ class PersonalInfosView(APIView):
             return Response(status=400, data=ValidationError(serializer.errors))
         serializer.is_valid()
         serializer.save()
-        return Response(status=200, data=serializer.validated_data)
+        serializer = PersonalInfosSerializer(user)
+        return Response(status=200, data=serializer.data)
