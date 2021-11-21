@@ -6,6 +6,17 @@ from django.db import models
 from tinymce.models import HTMLField
 
 
+class Brand(models.Model):
+    name = models.CharField(max_length=50, default=None, null=True, blank=True)
+    image = models.ImageField(upload_to="uploads/brands", blank=True, null=True)
+
+    class Meta:
+        ordering = ("name",)
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -21,6 +32,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    brand = models.ForeignKey(
+        Brand, related_name="products", on_delete=models.CASCADE
+    )
     category = models.ForeignKey(
         Category, related_name="products", on_delete=models.CASCADE
     )
@@ -78,3 +92,6 @@ class ProductColors(models.Model):
     product = models.ForeignKey(Product, related_name="product_colors", on_delete=models.CASCADE)
     name = models.CharField(max_length=20, blank=True, default="")
     image = models.ImageField(upload_to="products/colors", blank=True, null=True)
+
+
+
