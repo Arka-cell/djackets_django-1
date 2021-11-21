@@ -1,12 +1,13 @@
 from django.contrib import admin
 
-from .models import Category, Product, ProductColors
+from .models import Category, Product, ProductColors, Brand
 from django.utils.safestring import mark_safe
 from django.conf import settings
 
 
 admin.site.register(Category)
 admin.site.register(ProductColors)
+admin.site.register(Brand)
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
