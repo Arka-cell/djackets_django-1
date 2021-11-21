@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
+from .models import Product, Category, Brand
+from .serializers import ProductSerializer, CategorySerializer, BrandSerializer
 
 
 class LatestProductsList(APIView):
@@ -56,3 +56,22 @@ def search(request):
         return Response(serializer.data)
     else:
         return Response({"products": []})
+
+
+class BrandsView(APIView):
+    def get(self):
+        brands = Brand.objects.all()
+        serializer = BrandSerializer(brands, many=True)
+        Response(data=serializer.data)
+
+
+class BrandsProductsView(APIView):
+    def get(self, brand_id):
+        if Product.objects.filter(brand=Brand.objects.get(id=brand_id)).exists():
+            products = Product.objects.filter(brand=Brand.objects.get(id=brand_id))
+            serializer = ProductSerializer(products, many=True)
+            return Response(serializer.data)
+        
+        else:
+            return Response(status=500)
+
