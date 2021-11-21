@@ -59,14 +59,14 @@ def search(request):
 
 
 class BrandsView(APIView):
-    def get(self):
+    def get(self, request):
         brands = Brand.objects.all()
         serializer = BrandSerializer(brands, many=True)
-        Response(data=serializer.data)
+        return Response(data=serializer.data)
 
 
 class BrandsProductsView(APIView):
-    def get(self, brand_id):
+    def get(self, request, brand_id):
         if Product.objects.filter(brand=Brand.objects.get(id=brand_id)).exists():
             products = Product.objects.filter(brand=Brand.objects.get(id=brand_id))
             serializer = ProductSerializer(products, many=True)
